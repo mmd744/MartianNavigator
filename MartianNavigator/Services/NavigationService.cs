@@ -9,20 +9,16 @@ namespace MartianNavigator.Services
     {
         #region Fields
 
-        private readonly GridSurface surface;
-
-        #endregion
-
-        #region Constructors
-
-        public NavigationService(int maxX, int maxY)
-        {
-            this.surface = new GridSurface(maxX, maxY);
-        }
+        private GridSurface surface;
 
         #endregion
 
         #region Methods
+
+        public void Initialize(int maxX, int maxY)
+        {
+            this.surface = new GridSurface(maxX, maxY);
+        }
 
         public void Navigate(Robot robot, IEnumerable<CommandEnum> commands)
         {
