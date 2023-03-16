@@ -16,6 +16,93 @@ namespace MartianNavigator.Tests
             this.navigationService = new NavigationService();
         }
 
+        #region TestCase sources
+
+        // Sample input from tech task
+        private static IEnumerable<NavigateInput> NavigateTestCases()
+        {
+            yield return new NavigateInput
+            {
+                MaxX = 5,
+                MaxY = 3,
+                RobotInfos = new List<RobotInfo>
+                {
+                    new RobotInfo
+                    {
+                        InitialX = 1,
+                        InitialY = 1,
+                        InitialOrientation = OrientationEnum.E,
+                        Commands = new List<CommandEnum>
+                        {
+                            CommandEnum.R,
+                            CommandEnum.F,
+                            CommandEnum.R,
+                            CommandEnum.F,
+                            CommandEnum.R,
+                            CommandEnum.F,
+                            CommandEnum.R,
+                            CommandEnum.F
+                        },
+                        ExpectedX = 1,
+                        ExpectedY = 1,
+                        ExpectedOrientation = OrientationEnum.E,
+                        ExpectedRobotStatus = RobotStatusEnum.Successful
+                    },
+                    new RobotInfo
+                    {
+                        InitialX = 3,
+                        InitialY = 2,
+                        InitialOrientation = OrientationEnum.N,
+                        Commands = new List<CommandEnum>
+                        {
+                            CommandEnum.F,
+                            CommandEnum.R,
+                            CommandEnum.R,
+                            CommandEnum.F,
+                            CommandEnum.L,
+                            CommandEnum.L,
+                            CommandEnum.F,
+                            CommandEnum.F,
+                            CommandEnum.R,
+                            CommandEnum.R,
+                            CommandEnum.F,
+                            CommandEnum.L,
+                            CommandEnum.L,
+                        },
+                        ExpectedX = 3,
+                        ExpectedY = 3,
+                        ExpectedOrientation = OrientationEnum.N,
+                        ExpectedRobotStatus = RobotStatusEnum.Lost
+                    },
+                    new RobotInfo
+                    {
+                        InitialX = 0,
+                        InitialY = 3,
+                        InitialOrientation = OrientationEnum.W,
+                        Commands = new List<CommandEnum> // LLFFFLFLFL
+                        {
+                            CommandEnum.L,
+                            CommandEnum.L,
+                            CommandEnum.F,
+                            CommandEnum.F,
+                            CommandEnum.F,
+                            CommandEnum.L,
+                            CommandEnum.F,
+                            CommandEnum.L,
+                            CommandEnum.F,
+                            CommandEnum.L
+                        },
+                        ExpectedX = 2,
+                        ExpectedY = 3,
+                        ExpectedOrientation = OrientationEnum.S,
+                        ExpectedRobotStatus = RobotStatusEnum.Successful
+                    }
+                }
+            };
+        }
+
+        #endregion
+
         #region Mock setups
 
         private static void Mock_GridSurface_IsOccupied(Mock<IGridSurface> gridSurfaceMock, bool value) =>
@@ -32,9 +119,31 @@ namespace MartianNavigator.Tests
             gridSurfaceMock.Setup(gsm => gsm.IsScented(It.IsAny<IPosition>())).Returns(value);
 
         //private static void Mock_GridSurface_SetPositionStatus(Mock<IGridSurface> gridSurfaceMock, IPosition position) =>
-            
+
 
         #endregion
+
+        [TestCaseSource(nameof(NavigateTestCases))]
+        public void Navigate_Test(NavigateInput input)
+        {
+            IGridSurface grid = new GridSurface(input.MaxX, input.MaxY);
+
+            foreach (var ri in input.RobotInfos)
+            {
+                IPosition position = new Position(ri.InitialX, ri.InitialY, ri.InitialOrientation);
+                IRobot robot = new Robot(position);
+                navigationService.Initialize(grid);
+                navigationService.Navigate(robot, ri.Commands);
+
+                Assert.Multiple((TestDelegate)(() =>
+                {
+                    Assert.That(robot.CurrentPosition.X, Is.EqualTo((object)ri.ExpectedX));
+                    Assert.That(robot.CurrentPosition.Y, Is.EqualTo((object)ri.ExpectedY));
+                    Assert.That(robot.CurrentPosition.Orientation, Is.EqualTo((object)ri.ExpectedOrientation));
+                    Assert.That(robot.CurrentStatus, Is.EqualTo((object)ri.ExpectedRobotStatus));
+                }));
+            }
+        }
 
         [Test]
         public void Navigate_LandingOccupiedPosition_ChangesRobotStatus()

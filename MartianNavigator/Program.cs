@@ -17,7 +17,7 @@ namespace MartianNavigator
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex is FormatException || ex is ArgumentOutOfRangeException
+                Console.WriteLine(ex is FormatException || ex is ArgumentOutOfRangeException || ex is ArgumentNullException
                     ? ex.Message
                     : "Something went wrong.");
 
