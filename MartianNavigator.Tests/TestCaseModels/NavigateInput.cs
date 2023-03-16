@@ -1,7 +1,7 @@
 ﻿using MartianNavigator.Enums;
 using System.Collections.Generic;
 
-namespace MartianNavigator.Tests
+namespace MartianNavigator.Tests.TestCaseModels
 {
     public class NavigateInput
     {

@@ -1,10 +1,10 @@
 using MartianNavigator.Enums;
 using MartianNavigator.Models;
 using MartianNavigator.Services;
+using MartianNavigator.Tests.TestCaseModels;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MartianNavigator.Tests
 {
@@ -118,8 +118,6 @@ namespace MartianNavigator.Tests
         private static void Mock_GridSurface_IsScented(Mock<IGridSurface> gridSurfaceMock, bool value) =>
             gridSurfaceMock.Setup(gsm => gsm.IsScented(It.IsAny<IPosition>())).Returns(value);
 
-        //private static void Mock_GridSurface_SetPositionStatus(Mock<IGridSurface> gridSurfaceMock, IPosition position) =>
-
 
         #endregion
 
@@ -137,10 +135,10 @@ namespace MartianNavigator.Tests
 
                 Assert.Multiple((TestDelegate)(() =>
                 {
-                    Assert.That(robot.CurrentPosition.X, Is.EqualTo((object)ri.ExpectedX));
-                    Assert.That(robot.CurrentPosition.Y, Is.EqualTo((object)ri.ExpectedY));
-                    Assert.That(robot.CurrentPosition.Orientation, Is.EqualTo((object)ri.ExpectedOrientation));
-                    Assert.That(robot.CurrentStatus, Is.EqualTo((object)ri.ExpectedRobotStatus));
+                    Assert.That(robot.CurrentPosition.X, Is.EqualTo(ri.ExpectedX));
+                    Assert.That(robot.CurrentPosition.Y, Is.EqualTo(ri.ExpectedY));
+                    Assert.That(robot.CurrentPosition.Orientation, Is.EqualTo(ri.ExpectedOrientation));
+                    Assert.That(robot.CurrentStatus, Is.EqualTo(ri.ExpectedRobotStatus));
                 }));
             }
         }
