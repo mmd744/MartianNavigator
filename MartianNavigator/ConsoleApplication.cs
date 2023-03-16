@@ -27,7 +27,7 @@ namespace MartianNavigator
 
             validationService.ValidateCoordinates(maxX, maxY);
 
-            IList<(Robot robot, IEnumerable<CommandEnum> commands)> robotInstructions = new List<(Robot, IEnumerable<CommandEnum>)>();
+            IList<(IRobot robot, IEnumerable<CommandEnum> commands)> robotInstructions = new List<(IRobot, IEnumerable<CommandEnum>)>();
 
             while (true)
             {
@@ -52,12 +52,12 @@ namespace MartianNavigator
 
                 var commands = instructions.Select(i => Enum.Parse<CommandEnum>(i.ToString()));
 
-                var robot = new Robot(initialX, initialY, orientation);
+                IRobot robot = new Robot(initialX, initialY, orientation);
 
                 robotInstructions.Add((robot, commands));
             }
 
-            navigationService.Initialize(maxX, maxY);
+            navigationService.Initialize(new GridSurface(maxX, maxY));
 
             foreach (var (robot, commands) in robotInstructions)
             {
