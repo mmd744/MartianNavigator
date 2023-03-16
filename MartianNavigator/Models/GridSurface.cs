@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MartianNavigator.Models
 {
-    public class GridSurface
+    public class GridSurface : IGridSurface
     {
         #region Fields
 
@@ -29,18 +29,21 @@ namespace MartianNavigator.Models
 
         #region Methods
 
-        public bool IsOutOfRange(Position position) =>
-            position.X > this.maxX || position.X < 0 || 
+        public bool IsOutOfRange(IPosition position) =>
+            position.X > this.maxX || position.X < 0 ||
             position.Y > this.maxY || position.Y < 0;
 
-        public bool IsOccupied(Position position) =>
+        public bool IsOccupied(IPosition position) =>
             this.surface[position.X, position.Y] == GridPositionStatusEnum.Occupied;
 
-        public bool IsScented(Position position) =>
+        public bool IsScented(IPosition position) =>
             this.surface[position.X, position.Y] == GridPositionStatusEnum.Scented;
 
-        public void SetPositionStatus(Position position, GridPositionStatusEnum status) =>
+        public void SetPositionStatus(IPosition position, GridPositionStatusEnum status) =>
             this.surface[position.X, position.Y] = status;
+
+        public GridPositionStatusEnum GetPositionStatus(IPosition position) =>
+            this.surface[position.X, position.Y];
 
         #endregion
     }

@@ -2,7 +2,7 @@
 
 namespace MartianNavigator.Models
 {
-    public class Position
+    public class Position : IPosition
     {
         #region Constructors
 
@@ -20,13 +20,13 @@ namespace MartianNavigator.Models
         public int X { get; set; }
         public int Y { get; set; }
         public OrientationEnum Orientation { get; set; }
-        
+
         #endregion
 
         #region Methods
 
-        public Position CreateCopy() => new Position(X, Y, Orientation);
-        
+        public IPosition CreateCopy() => new Position(X, Y, Orientation);
+
         #endregion
     }
 }

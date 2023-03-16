@@ -9,18 +9,18 @@ namespace MartianNavigator.Services
     {
         #region Fields
 
-        private GridSurface surface;
+        private IGridSurface surface;
 
         #endregion
 
         #region Methods
 
-        public void Initialize(int maxX, int maxY)
+        public void Initialize(IGridSurface gridSurface)
         {
-            this.surface = new GridSurface(maxX, maxY);
+            this.surface = gridSurface;
         }
 
-        public void Navigate(Robot robot, IEnumerable<CommandEnum> commands)
+        public void Navigate(IRobot robot, IEnumerable<CommandEnum> commands)
         {
             if (surface.IsOccupied(robot.CurrentPosition)) // RobotStatusEnum.ImpossibleLanding
             {

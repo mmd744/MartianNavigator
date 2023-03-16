@@ -7,10 +7,18 @@ namespace MartianNavigator.Services
 {
     public class ValidationService : IValidationService
     {
+        private static void CheckNullOrEmpty(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentNullException("Value cannot be null or empty.");
+        }
+
         #region Format Validations
 
         public void ValidateRightUpperBoundStringFormat(string rightUpperBoundString)
         {
+            CheckNullOrEmpty(rightUpperBoundString);
+
             var splitted = rightUpperBoundString.Split(' ');
             if (splitted.Count() != 2 || splitted.Any(v => !int.TryParse(v, out _)))
             {
@@ -20,10 +28,11 @@ namespace MartianNavigator.Services
 
         public void ValidatePositionAndOrientationStringFormat(string positionAndOrientationString)
         {
-            var splitted = positionAndOrientationString.Split(' ');
+            CheckNullOrEmpty(positionAndOrientationString);
 
-            if (splitted.Count() != 3 || 
-                !int.TryParse(splitted[0], out _) || 
+            var splitted = positionAndOrientationString.Split(' ');
+            if (splitted.Count() != 3 ||
+                !int.TryParse(splitted[0], out _) ||
                 !int.TryParse(splitted[1], out _) ||
                 !Enum.TryParse<OrientationEnum>(splitted[2], out _))
             {
@@ -33,9 +42,10 @@ namespace MartianNavigator.Services
 
         public void ValidateInstructionsStringFormat(string instructionsString)
         {
-            if (string.IsNullOrEmpty(instructionsString) ||
-            instructionsString.Length > 99 ||
-            instructionsString.Any(i => !Enum.TryParse<CommandEnum>(i.ToString(), out _)))
+            CheckNullOrEmpty(instructionsString);
+
+            if (instructionsString.Length > 99 ||
+                instructionsString.Any(i => !Enum.TryParse<CommandEnum>(i.ToString(), out _)))
             {
                 throw new FormatException("Instructions string format is incorrect. Example: \"RFRFRFRF\" ");
             }
